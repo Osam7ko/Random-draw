@@ -58,7 +58,7 @@ export default function AdminPage() {
     const baseUrl = process.env.NODE_ENV === 'production' 
       ? 'https://Osam7ko.github.io/raffle-app' 
       : window.location.origin;
-    const fullLink = `${baseUrl}/visitor/${generatedEventId}?range=${numberRange}`;
+    const fullLink = `${baseUrl}/#/visitor/${generatedEventId}?range=${numberRange}`;
     
     setEventId(generatedEventId);
     setCampaignLink(fullLink);
