@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/raffle-app/static/css/main.34bda594.css",
-    "main.js": "/raffle-app/static/js/main.5daf2756.js",
-    "index.html": "/raffle-app/index.html",
-    "main.34bda594.css.map": "/raffle-app/static/css/main.34bda594.css.map",
-    "main.5daf2756.js.map": "/raffle-app/static/js/main.5daf2756.js.map"
+    "main.css": "/static/css/main.34bda594.css",
+    "main.js": "/static/js/main.03d5efe8.js",
+    "index.html": "/index.html",
+    "main.34bda594.css.map": "/static/css/main.34bda594.css.map",
+    "main.03d5efe8.js.map": "/static/js/main.03d5efe8.js.map"
   },
   "entrypoints": [
     "static/css/main.34bda594.css",
-    "static/js/main.5daf2756.js"
+    "static/js/main.03d5efe8.js"
   ]
 }
