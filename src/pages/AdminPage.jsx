@@ -54,9 +54,9 @@ export default function AdminPage() {
     const cleanName = name.replace(/\s+/g, '-').toLowerCase();
     const generatedEventId = `${cleanName}-${randomId}`;
     
-    // Use GitHub Pages URL for production or localhost for development
+    // Use custom domain for production or localhost for development
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://Osam7ko.github.io/raffle-app' 
+      ? 'https://raffle.oalqefary.com' 
       : window.location.origin;
     const fullLink = `${baseUrl}/#/visitor/${generatedEventId}?range=${numberRange}`;
     
