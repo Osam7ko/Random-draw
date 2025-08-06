@@ -150,32 +150,11 @@ export default function QRVisitorPage() {
           <p style={{ 
             color: "#718096", 
             fontSize: "1.1rem",
-            lineHeight: "1.6"
+            lineHeight: "1.6",
+            marginTop: "2rem"
           }}>
-            احتفظ بهذا الرقم للمشاركة في السحب
+            احتفظ بهذا الرقم للمشاركة في السحب ولاتنسى تصور الشاشة
           </p>
-          <div style={{
-            marginTop: "3rem",
-            padding: "1rem",
-            background: "#f7fafc",
-            borderRadius: "12px",
-            border: "2px solid #e2e8f0"
-          }}>
-            <p style={{ 
-              margin: 0, 
-              color: "#4a5568",
-              fontSize: "0.9rem"
-            }}>
-              تم تسجيل رقمك بنجاح في النظام
-            </p>
-            <p style={{ 
-              margin: "0.5rem 0 0 0", 
-              color: "#718096",
-              fontSize: "0.8rem"
-            }}>
-              النطاق: 1 - {numberRange}
-            </p>
-          </div>
         </div>
       </div>
     </div>
