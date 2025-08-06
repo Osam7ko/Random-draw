@@ -21,55 +21,49 @@ export default function QRVisitorPage() {
 
   const generateUniqueNumber = async () => {
     try {
-      // First, get all existing numbers for this event
-      const q = query(numbersCollection, where("eventId", "==", eventId || "default"));
-      const snapshot = await getDocs(q);
-      const existingNumbers = new Set(snapshot.docs.map(doc => parseInt(doc.data().number)));
+      let attempts = 0;
+      const maxAttempts = numberRange * 2; // Prevent infinite loops
       
-      // Check if all numbers in range are taken
-      if (existingNumbers.size >= numberRange) {
-        setError(`جميع الأرقام في النطاق (1-${numberRange}) قد تم توزيعها`);
-        return null;
-      }
-      
-      // Find the first available number in sequence
-      let newNumber = null;
-      for (let i = 1; i <= numberRange; i++) {
-        if (!existingNumbers.has(i)) {
-          newNumber = i.toString();
-          break;
-        }
-      }
-      
-      if (newNumber) {
-        // Double-check by querying the database again to prevent race conditions
-        const doubleCheckQuery = query(
+      while (attempts < maxAttempts) {
+        // Generate a random number from 1 to numberRange
+        const randomNumber = Math.floor(Math.random() * numberRange) + 1;
+        const numberString = randomNumber.toString();
+        
+        // Check if this number already exists for this event
+        const checkQuery = query(
           numbersCollection, 
-          where("number", "==", newNumber), 
+          where("number", "==", numberString), 
           where("eventId", "==", eventId || "default")
         );
-        const doubleCheckSnapshot = await getDocs(doubleCheckQuery);
+        const checkSnapshot = await getDocs(checkQuery);
         
-        if (doubleCheckSnapshot.empty) {
-          // Add the number to database
-          await addDoc(numbersCollection, {
-            number: newNumber,
-            timestamp: new Date(),
-            eventId: eventId || "default",
-            range: numberRange,
-          });
-          return newNumber;
-        } else {
-          // If number was taken in the meantime, try again
-          return await generateUniqueNumber();
+        if (checkSnapshot.empty) {
+          // Number is available, try to add it
+          try {
+            await addDoc(numbersCollection, {
+              number: numberString,
+              timestamp: new Date(),
+              eventId: eventId || "default",
+              range: numberRange,
+            });
+            return numberString;
+          } catch (addError) {
+            // If add fails (race condition), try another number
+            console.log("Race condition detected, trying another number");
+            attempts++;
+            continue;
+          }
         }
+        
+        attempts++;
       }
       
-      setError(`لا توجد أرقام متاحة في النطاق (1-${numberRange})`);
+      // If we've tried many times and failed, show error
+      setError("حدث خطأ في توليد رقم فريد، يرجى المحاولة مرة أخرى");
       return null;
     } catch (err) {
       console.error("Error generating number:", err);
-      setError("حدث خطأ في توليد الرقم");
+      setError("حدث خطأ في الاتصال بالخادم");
       return null;
     }
   };
