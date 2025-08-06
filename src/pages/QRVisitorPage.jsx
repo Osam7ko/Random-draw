@@ -137,8 +137,8 @@ export default function QRVisitorPage() {
           <div style={{
             fontSize: "4rem",
             fontWeight: "bold",
-            color: "#667eea",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            color: "#4a90a4",
+            background: "linear-gradient(135deg, #4a90a4 0%, #5a6c7d 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
