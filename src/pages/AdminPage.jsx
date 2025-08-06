@@ -56,7 +56,7 @@ export default function AdminPage() {
     
     // Use custom domain for production or localhost for development
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://raffle.osqio.com' 
+      ? 'https://random-draw.osqio.com' 
       : window.location.origin;
     const fullLink = `${baseUrl}/#/visitor/${generatedEventId}`;
     
