@@ -131,7 +131,7 @@ export default function QRVisitorPage() {
     <div className="admin-container">
       <div className="admin-card">
         <div style={{ textAlign: "center", padding: "2rem" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "2rem" }}>🎫</div>
+          <div style={{ fontSize: "3rem", marginBottom: "2rem" }}></div>
           <h1 style={{ 
             fontSize: "2rem", 
             marginBottom: "2rem", 
