@@ -1,4 +1,4 @@
 Raffle project
-Link: [https://raffle.oalqefary.com/#/login](http://raffle.osqio.com/#/login)
+Link: https://raffle.osqio.com/
 
 # مشروع بسيط للسحوبات وانشاء الباركود للاجتماعات والمجموعات
