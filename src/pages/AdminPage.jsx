@@ -56,7 +56,7 @@ export default function AdminPage() {
     
     // Use custom domain for production or localhost for development
     const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://raffle.oalqefary.com' 
+      ? 'https://raffle.osqio.com' 
       : window.location.origin;
     const fullLink = `${baseUrl}/#/visitor/${generatedEventId}?range=${numberRange}`;
     
@@ -180,9 +180,18 @@ export default function AdminPage() {
             <div className="user-info">
               <span className="user-email">{currentUser?.email}</span>
             </div>
-            <button onClick={handleLogout} className="btn btn-secondary btn-small">
-              تسجيل الخروج
-            </button>
+            <div className="header-actions">
+              <a 
+                href="mailto:on_service@osqio.com?subject=مساعدة في تطبيق السحب&body=مرحباً، أحتاج مساعدة في:"
+                className="btn btn-contact btn-small"
+                title="تواصل معنا للمساعدة"
+              >
+                📧 مساعدة
+              </a>
+              <button onClick={handleLogout} className="btn btn-secondary btn-small">
+                تسجيل الخروج
+              </button>
+            </div>
           </div>
           
           <h1 className="admin-title">إعداد المسؤول</h1>
@@ -210,14 +219,14 @@ export default function AdminPage() {
                   type="text"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  placeholder="مثال: سحب جوائز رمضان 2024"
+                  placeholder="مثال: سحب حضور فعالية / اجتماع"
                   className="form-input"
                 />
               </div>
 
               <div className="form-group">
                 <label className="form-label">
-                  نطاق الأرقام:
+                  نطاق الارقام الظاهرة للمشاركين:
                 </label>
                 <div className="range-options">
                   {["100", "200", "300"].map((range) => (

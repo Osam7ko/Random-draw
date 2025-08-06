@@ -21,25 +21,52 @@ export default function QRVisitorPage() {
 
   const generateUniqueNumber = async () => {
     try {
-      let unique = false;
+      // First, get all existing numbers for this event
+      const q = query(numbersCollection, where("eventId", "==", eventId || "default"));
+      const snapshot = await getDocs(q);
+      const existingNumbers = new Set(snapshot.docs.map(doc => parseInt(doc.data().number)));
+      
+      // Check if all numbers in range are taken
+      if (existingNumbers.size >= numberRange) {
+        setError(`جميع الأرقام في النطاق (1-${numberRange}) قد تم توزيعها`);
+        return null;
+      }
+      
+      // Find the first available number in sequence
       let newNumber = null;
-
-      while (!unique) {
-        // Generate number based on range (1 to numberRange)
-        newNumber = Math.floor(1 + Math.random() * numberRange).toString();
-        const q = query(numbersCollection, where("number", "==", newNumber), where("eventId", "==", eventId || "default"));
-        const snapshot = await getDocs(q);
-        if (snapshot.empty) {
+      for (let i = 1; i <= numberRange; i++) {
+        if (!existingNumbers.has(i)) {
+          newNumber = i.toString();
+          break;
+        }
+      }
+      
+      if (newNumber) {
+        // Double-check by querying the database again to prevent race conditions
+        const doubleCheckQuery = query(
+          numbersCollection, 
+          where("number", "==", newNumber), 
+          where("eventId", "==", eventId || "default")
+        );
+        const doubleCheckSnapshot = await getDocs(doubleCheckQuery);
+        
+        if (doubleCheckSnapshot.empty) {
+          // Add the number to database
           await addDoc(numbersCollection, {
             number: newNumber,
             timestamp: new Date(),
             eventId: eventId || "default",
             range: numberRange,
           });
-          unique = true;
+          return newNumber;
+        } else {
+          // If number was taken in the meantime, try again
+          return await generateUniqueNumber();
         }
       }
-      return newNumber;
+      
+      setError(`لا توجد أرقام متاحة في النطاق (1-${numberRange})`);
+      return null;
     } catch (err) {
       console.error("Error generating number:", err);
       setError("حدث خطأ في توليد الرقم");

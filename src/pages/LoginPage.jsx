@@ -49,6 +49,19 @@ export default function LoginPage() {
     setLoading(false);
   }
 
+  async function handleTestLogin() {
+    try {
+      setError('');
+      setLoading(true);
+      await login('test@test.com', 'password');
+      navigate('/admin');
+    } catch (error) {
+      console.error('Test login error:', error);
+      setError('حدث خطأ أثناء تسجيل الدخول التجريبي');
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -62,7 +75,6 @@ export default function LoginPage() {
           {!isSignUp && (
             <div className="demo-credentials">
               <p><strong>حسابات تجريبية:</strong></p>
-              <p>admin@raffle.com / 123456</p>
               <p>test@test.com / password</p>
             </div>
           )}
@@ -107,6 +119,18 @@ export default function LoginPage() {
           >
             {loading ? 'جاري التحميل...' : (isSignUp ? 'إنشاء حساب' : 'تسجيل الدخول')}
           </button>
+
+          {!isSignUp && (
+            <button 
+              type="button"
+              onClick={handleTestLogin}
+              disabled={loading}
+              className="btn btn-test btn-full"
+              style={{ marginTop: '1rem' }}
+            >
+              🚀 دخول سريع (حساب تجريبي)
+            </button>
+          )}
         </form>
 
         <div className="login-footer">
