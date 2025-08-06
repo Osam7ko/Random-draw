@@ -12,12 +12,28 @@ export default function QRVisitorPage() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    // Get range from URL parameters
-    const rangeParam = searchParams.get('range');
-    if (rangeParam) {
-      setNumberRange(parseInt(rangeParam));
+    // Get range from existing entries for this event
+    const fetchEventRange = async () => {
+      try {
+        const q = query(numbersCollection, where("eventId", "==", eventId || "default"));
+        const snapshot = await getDocs(q);
+        
+        if (!snapshot.empty) {
+          // Get range from existing entry
+          const firstEntry = snapshot.docs[0].data();
+          if (firstEntry.range) {
+            setNumberRange(firstEntry.range);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching event range:", error);
+      }
+    };
+
+    if (eventId) {
+      fetchEventRange();
     }
-  }, [searchParams]);
+  }, [eventId]);
 
   const generateUniqueNumber = async () => {
     try {

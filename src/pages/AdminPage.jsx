@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
-import { getDocs, deleteDoc, query, where } from "firebase/firestore";
+import { getDocs, deleteDoc, query, where, onSnapshot } from "firebase/firestore";
 import { numbersCollection } from "../services/firebase";
 import { useAuth } from "../contexts/SimpleAuthContext";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +58,7 @@ export default function AdminPage() {
     const baseUrl = process.env.NODE_ENV === 'production' 
       ? 'https://raffle.osqio.com' 
       : window.location.origin;
-    const fullLink = `${baseUrl}/#/visitor/${generatedEventId}?range=${numberRange}`;
+    const fullLink = `${baseUrl}/#/visitor/${generatedEventId}`;
     
     setEventId(generatedEventId);
     setCampaignLink(fullLink);
@@ -154,9 +154,30 @@ export default function AdminPage() {
     }
   };
 
+  // Real-time listener for entries
   useEffect(() => {
     if ((step === 4 || step === 5) && eventId) {
-      fetchEntries();
+      console.log("Setting up real-time listener for eventId:", eventId);
+      
+      // Create query for this specific event
+      const q = query(numbersCollection, where("eventId", "==", eventId));
+      
+      // Set up real-time listener
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log("Real-time update received:", data.length, "entries");
+        setEntries(data);
+      }, (error) => {
+        console.error("Error in real-time listener:", error);
+        // Fallback to manual fetch if real-time fails
+        fetchEntries();
+      });
+
+      // Cleanup function to unsubscribe when component unmounts or dependencies change
+      return () => {
+        console.log("Cleaning up real-time listener");
+        unsubscribe();
+      };
     }
   }, [step, eventId]);
 
@@ -357,7 +378,19 @@ export default function AdminPage() {
           {step === 4 && (
             <div>
               <div className="entries-header">
-                <h3>الأرقام المسجلة ({entries.length})</h3>
+                <div>
+                  <h3>الأرقام المسجلة ({entries.length})</h3>
+                  <p style={{ 
+                    fontSize: "0.8rem", 
+                    color: "#48bb78", 
+                    margin: "0.5rem 0 0 0",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem"
+                  }}>
+                    🔄 التحديث التلقائي مفعل - لا حاجة لتحديث الصفحة
+                  </p>
+                </div>
                 {entries.length > 0 && (
                   <button 
                     onClick={clearDatabase}
